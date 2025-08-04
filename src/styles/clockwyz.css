@@ -1,0 +1,1369 @@
+/* Clockwyz Schedule Grid Styles */
+
+.app-clockwyz {
+    display: flex;
+    height: 100vh;
+    background: #f8fafc;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    user-select: none;
+  }
+  
+  /* ===== SIDEBAR STYLES ===== */
+  .sidebar-clockwyz {
+    width: 280px;
+    background: #1e293b;
+    border-right: 1px solid #334155;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease;
+  }
+  
+  .sidebar-clockwyz.collapsed {
+    width: 64px;
+  }
+  
+  .sidebar-header-clockwyz {
+    padding: 24px;
+    border-bottom: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .logo-clockwyz {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .logo-icon-clockwyz {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    border-radius: 8px;
+    padding: 6px;
+    color: white;
+  }
+  
+  .logo-text-clockwyz {
+    font-size: 20px;
+    font-weight: 600;
+    color: white;
+  }
+  
+  .collapse-btn-clockwyz {
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  
+  .collapse-btn-clockwyz:hover {
+    background: #334155;
+    color: white;
+  }
+  
+  .sidebar-nav-clockwyz {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .nav-item-clockwyz {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    margin-bottom: 4px;
+    background: none;
+    border: none;
+    border-radius: 8px;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+    font-weight: 500;
+    justify-content: flex-start;
+  }
+  
+  .nav-item-clockwyz:hover {
+    background: #334155;
+    color: white;
+  }
+  
+  .nav-item-clockwyz.active {
+    background: #1e40af;
+    color: white;
+  }
+  
+  .nav-icon-clockwyz {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+  
+  .nav-label-clockwyz {
+    flex: 1;
+    text-align: left;
+  }
+  
+  .nav-badge-clockwyz {
+    background: #10b981;
+    color: white;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 12px;
+  }
+  
+  .sidebar-stats-clockwyz {
+    padding: 16px 24px;
+    border-top: 1px solid #334155;
+  }
+  
+  .stats-header-clockwyz {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .stat-item-clockwyz {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    color: #94a3b8;
+    font-size: 13px;
+  }
+  
+  /* ===== MAIN CONTENT STYLES ===== */
+  .main-content-clockwyz {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .header-clockwyz {
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .header-left-clockwyz {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  
+  .page-title-clockwyz {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+  }
+  
+  .date-nav-clockwyz {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .nav-btn-clockwyz {
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+  }
+  
+  .nav-btn-clockwyz:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+  }
+  
+  .current-month-clockwyz {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+  }
+  
+  .header-right-clockwyz {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .next-event-clockwyz {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+  
+  .next-label-clockwyz {
+    color: #64748b;
+  }
+  
+  .next-event-info-clockwyz {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #10b981;
+    font-weight: 500;
+  }
+  
+  .event-indicator-clockwyz {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+  }
+  
+  .add-task-btn-clockwyz {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .add-task-btn-clockwyz:hover {
+    background: #2563eb;
+  }
+  
+  .header-action-btn-clockwyz {
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    position: relative;
+  }
+  
+  .header-action-btn-clockwyz:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+  }
+  
+  .notification-btn-clockwyz .notification-dot-clockwyz {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+  }
+  
+  .user-avatar-clockwyz {
+    width: 32px;
+    height: 32px;
+    background: #10b981;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  /* ===== CONTENT AREA ===== */
+  .content-clockwyz {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+  }
+  
+  .week-stats-clockwyz {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+  
+  .stat-group-clockwyz {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  
+  .stat-clockwyz {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #64748b;
+  }
+  
+  .stat-clockwyz.focus {
+    color: #059669;
+    font-weight: 500;
+  }
+  
+  .stat-dot-clockwyz {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+  }
+  
+  .stat-dot-clockwyz.study {
+    background: #8b5cf6;
+  }
+  
+  .conflicts-alert-clockwyz {
+    background: #fef3c7;
+    border: 1px solid #f59e0b;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #92400e;
+    font-size: 14px;
+  }
+  
+  .alert-dismiss-clockwyz {
+    background: none;
+    border: none;
+    color: #92400e;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    margin-left: auto;
+  }
+  
+  /* ===== SCHEDULE CONTAINER ===== */
+  .schedule-container-clockwyz {
+    background: white;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  
+  .schedule-header-clockwyz {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  
+  .timezone-col-clockwyz {
+    background: #f8fafc;
+    border-right: 1px solid #f1f5f9;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .timezone-clockwyz {
+    font-size: 12px;
+    font-weight: 500;
+    color: #64748b;
+  }
+  
+  .day-headers-clockwyz {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+  }
+  
+  .day-header-clockwyz {
+    background: #f8fafc;
+    border-right: 1px solid #f1f5f9;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .day-header-clockwyz:last-child {
+    border-right: none;
+  }
+  
+  .day-header-clockwyz:hover {
+    background: #f1f5f9;
+  }
+  
+  .day-header-clockwyz.today {
+    background: #dbeafe;
+    color: #1d4ed8;
+  }
+  
+  
+  .day-name-clockwyz {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: #64748b;
+    margin-bottom: 4px;
+  }
+  
+  .day-number-clockwyz {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+  }
+  
+  /* ===== CALENDAR MAIN GRID ===== */
+  .calendar-main-clockwyz {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    min-height: 1088px; /* 17 hours * 64px = 1088px */
+  }
+  
+  .time-axis-clockwyz {
+    background: #f8fafc;
+    border-right: 1px solid #f1f5f9;
+    position: relative;
+  }
+  
+  .time-slot-clockwyz {
+    height: 64px; /* Fixed height for each hour slot */
+    border-bottom: 1px solid #334155;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 8px;
+    position: relative;
+    box-sizing: border-box;
+  }
+  
+  .time-slot-clockwyz:last-child {
+    border-bottom: none;
+  }
+  
+  .time-label-clockwyz {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
+  }
+  
+  .calendar-content-clockwyz {
+    position: relative;
+    overflow: hidden;
+    height: 1088px; /* Match the total height */
+  }
+  
+  .hour-grid-clockwyz {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+  }
+  
+  .hour-line-clockwyz {
+    height: 64px; /* Fixed height matching time slots */
+    border-bottom: 1px solid #334155;
+    position: relative;
+    box-sizing: border-box;
+  }
+  
+  .hour-line-clockwyz:last-child {
+    border-bottom: none;
+  }
+  
+  .hour-line-clockwyz.major {
+    border-bottom-color: #334155; /* Same color for consistency */
+  }
+  
+  .day-columns-clockwyz {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    position: relative;
+    z-index: 2;
+    height: 1088px; /* Fixed height to match time axis */
+  }
+  
+  .day-column-clockwyz {
+    border-right: 1px solid #090a0b;
+    position: relative;
+    height: 100%;
+    cursor: crosshair;
+  }
+  
+  .day-column-clockwyz:last-child {
+    border-right: none;
+  }
+  
+  .day-column-clockwyz.weekend {
+    /* Removed background color - weekends now look the same as weekdays */
+  }
+  
+  .day-column-clockwyz:hover {
+    background: rgba(59, 130, 246, 0.02);
+  }
+  
+  .day-events-clockwyz {
+    position: relative;
+    height: 100%;
+    padding: 0 4px;
+    pointer-events: none;
+  }
+  
+  /* ===== EVENT STYLES ===== */
+  .event-clockwyz {
+    position: absolute;
+    left: 4px;
+    right: 4px;
+    border-radius: 6px;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 13px;
+    color: white;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    pointer-events: auto;
+    border: 2px solid transparent;
+  }
+  
+  .event-clockwyz:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  .event-clockwyz.locked {
+    cursor: not-allowed;
+    opacity: 0.9;
+  }
+  
+  .event-clockwyz.locked:hover {
+    transform: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Event Type Colors */
+  .event-clockwyz.focus {
+    background: linear-gradient(135deg, #10b981, #059669);
+  }
+  
+  .event-clockwyz.class {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+  }
+  
+  .event-clockwyz.assignment {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  }
+  
+  .event-clockwyz.break {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+  }
+  
+  .event-clockwyz.study {
+    background: linear-gradient(135deg, #ec4899, #db2777);
+  }
+  
+  .event-clockwyz.meeting {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+  }
+  
+  .event-clockwyz.personal {
+    background: linear-gradient(135deg, #64748b, #475569);
+  }
+  
+  .event-content-clockwyz {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .event-title-clockwyz {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+    margin-bottom: 2px;
+    line-height: 1.3;
+  }
+  
+  .lock-icon-clockwyz {
+    opacity: 0.8;
+  }
+  
+  .event-emoji-clockwyz {
+    font-size: 12px;
+  }
+  
+  .title-text-clockwyz {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .priority-indicator-clockwyz {
+    color: #fbbf24;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  .event-details-clockwyz {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    opacity: 0.9;
+  }
+  
+  .event-time-clockwyz,
+  .event-location-clockwyz,
+  .event-course-clockwyz {
+    font-size: 11px;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .conflict-indicator-clockwyz {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: #ef4444;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+  
+  .drag-handle-clockwyz {
+    position: absolute;
+    display: hidden;
+    bottom: 4px;
+    right: 4px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  
+  .event-clockwyz:hover .drag-handle-clockwyz {
+    opacity: 0.7;
+  }
+  
+  /* ===== EVENT MENU ===== */
+  .event-menu-clockwyz {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    min-width: 200px;
+    overflow: hidden;
+    z-index: 100;
+  }
+  
+  .menu-header-clockwyz {
+    padding: 12px 16px;
+    border-bottom: 1px solid #e2e8f0;
+    background: #f8fafc;
+  }
+  
+  .menu-title-clockwyz {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 14px;
+  }
+  
+  .menu-actions-clockwyz {
+    padding: 8px 0;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .menu-action-clockwyz {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    color: #374151;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    justify-content: flex-start;
+  }
+  
+  .menu-action-clockwyz:hover {
+    background: #f3f4f6;
+  }
+  
+  .menu-action-clockwyz.danger {
+    color: #dc2626;
+  }
+  
+  .menu-action-clockwyz.danger:hover {
+    background: #fef2f2;
+  }
+  
+  .menu-divider-clockwyz {
+    margin: 4px 0;
+    border: none;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  /* Force override for popup form - add this to your CSS file */
+
+/* Container */
+/* Force override for popup form - add this to your CSS file */
+
+/* Container */
+.task-popup-clockwyz {
+    background: white !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+    z-index: 1001 !important;
+    padding: 0 !important;
+    width: 300px !important;
+    height: 300px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  
+  /* Tabs */
+  .popup-tabs-clockwyz {
+    display: flex !important;
+    width: 100% !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    background: #f9fafb !important;
+  }
+  
+  .tab-button-clockwyz {
+    flex: 1 !important;
+    padding: 12px 16px !important;
+    background: none !important;
+    border: none !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    border-bottom: 2px solid transparent !important;
+  }
+  
+  .tab-button-clockwyz.active {
+    background: white !important;
+    border-bottom-color: #3b82f6 !important;
+    color: #1f2937 !important;
+    font-weight: 600 !important;
+  }
+  
+  .tab-button-clockwyz.inactive {
+    background: #f9fafb !important;
+    color: #6b7280 !important;
+  }
+  
+  /* Content */
+  .popup-content-clockwyz {
+    flex: 1 !important;
+    padding: 16px !important;
+    overflow-y: auto !important;
+  }
+  
+  .popup-content-clockwyz .space-y-4 > * + * {
+    margin-top: 12px !important;
+  }
+  
+  /* Labels */
+  .popup-content-clockwyz label {
+    display: block !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    color: #374151 !important;
+    margin-bottom: 4px !important;
+  }
+  
+  /* Regular inputs */
+  .popup-content-clockwyz input[type="text"]:not(.duration-input-clockwyz) {
+    width: 100% !important;
+    padding: 6px 8px !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 4px !important;
+    font-size: 13px !important;
+    background: white !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Duration input wrapper */
+  .duration-input-wrapper-clockwyz {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  
+  .duration-input-clockwyz {
+    width: 100% !important;
+    padding: 6px 60px 6px 8px !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 4px !important;
+    font-size: 13px !important;
+    text-align: center !important;
+    background: white !important;
+    box-sizing: border-box !important;
+  }
+  
+  .duration-controls-clockwyz {
+    position: absolute !important;
+    right: 4px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    display: flex !important;
+    gap: 2px !important;
+  }
+  
+  .duration-btn-clockwyz {
+    width: 20px !important;
+    height: 20px !important;
+    border: none !important;
+    background: #f3f4f6 !important;
+    color: #374151 !important;
+    border-radius: 2px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  .duration-btn-clockwyz:hover:not(:disabled) {
+    background: #e5e7eb !important;
+    color: #1f2937 !important;
+  }
+  
+  .duration-btn-clockwyz:disabled {
+    opacity: 0.4 !important;
+    cursor: not-allowed !important;
+  }
+  
+  /* Select dropdown */
+  .select-wrapper-clockwyz {
+    position: relative !important;
+  }
+  
+  .select-trigger-clockwyz {
+    width: 100% !important;
+    padding: 6px 30px 6px 8px !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 4px !important;
+    font-size: 13px !important;
+    background: white !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+    text-align: left !important;
+  }
+  
+  .select-icon-clockwyz {
+    position: absolute !important;
+    right: 8px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 12px !important;
+    height: 12px !important;
+    color: #6b7280 !important;
+    pointer-events: none !important;
+  }
+  
+  .select-content-clockwyz {
+    position: absolute !important;
+    bottom: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: white !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 4px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    z-index: 1000 !important;
+    max-height: 200px !important;
+    overflow-y: auto !important;
+    margin-bottom: 2px !important;
+  }
+  
+  .select-item-clockwyz {
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
+    border: none !important;
+    background: none !important;
+    width: 100% !important;
+    text-align: left !important;
+  }
+  
+  .select-item-clockwyz:hover {
+    background: #f3f4f6 !important;
+  }
+  
+  /* Time row */
+  .time-row-clockwyz {
+    display: flex !important;
+    gap: 8px !important;
+  }
+  
+  .time-col-clockwyz {
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+  
+  /* Date input */
+  .date-input-wrapper-clockwyz {
+    position: relative !important;
+  }
+  
+  .date-input-clockwyz {
+    width: 100% !important;
+    padding: 6px 30px 6px 8px !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 4px !important;
+    font-size: 13px !important;
+    background: #f9fafb !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+  }
+  
+  .calendar-icon-clockwyz {
+    position: absolute !important;
+    right: 8px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 14px !important;
+    height: 14px !important;
+    color: #6b7280 !important;
+    pointer-events: none !important;
+  }
+  
+  /* Calendar popup */
+  .calendar-popup-clockwyz {
+    position: absolute !important;
+    bottom: 100% !important;
+    right: 0 !important;
+    width: 200px !important;
+    background: white !important;
+    border: 1px solid #3b82f6 !important;
+    border-radius: 6px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    z-index: 1002 !important;
+    padding: 12px !important;
+    margin-bottom: 2px !important;
+  }
+  
+  .calendar-header-clockwyz {
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    text-align: center !important;
+    margin-bottom: 8px !important;
+    color: #1f2937 !important;
+  }
+  
+  .calendar-grid-clockwyz {
+    display: grid !important;
+    grid-template-columns: repeat(7, 1fr) !important;
+    gap: 1px !important;
+    font-size: 11px !important;
+  }
+  
+  .calendar-day-header-clockwyz {
+    text-align: center !important;
+    font-weight: 600 !important;
+    padding: 4px !important;
+    color: #6b7280 !important;
+    font-size: 10px !important;
+  }
+  
+  .calendar-day-clockwyz {
+    padding: 4px !important;
+    text-align: center !important;
+    cursor: pointer !important;
+    border-radius: 2px !important;
+    font-size: 11px !important;
+    border: none !important;
+    background: none !important;
+  }
+  
+  .calendar-day-clockwyz:hover:not(:disabled) {
+    background: #f3f4f6 !important;
+  }
+  
+  .calendar-day-clockwyz.other-month {
+    color: #d1d5db !important;
+    cursor: default !important;
+  }
+  
+  /* Footer */
+  .popup-footer-clockwyz {
+    padding: 12px 16px !important;
+    border-top: 1px solid #e2e8f0 !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    background: #f9fafb !important;
+  }
+  
+  .create-btn-clockwyz {
+    padding: 6px 16px !important;
+    background: #3b82f6 !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+  }
+  
+  .create-btn-clockwyz:hover {
+    background: #2563eb !important;
+  }
+  
+  /* Backdrop */
+  .popup-backdrop-clockwyz {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: rgba(0, 0, 0, 0.1) !important;
+    z-index: 1000 !important;
+  }
+  
+  /* Plan Work Tab - Days Selector */
+  .days-selector-clockwyz {
+    display: flex !important;
+    gap: 4px !important;
+    flex-wrap: wrap !important;
+  }
+  
+  .day-btn-clockwyz {
+    padding: 4px 8px !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 4px !important;
+    background: white !important;
+    color: #374151 !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease !important;
+    min-width: 32px !important;
+  }
+  
+  .day-btn-clockwyz:hover {
+    background: #f3f4f6 !important;
+    border-color: #9ca3af !important;
+  }
+  
+  .day-btn-clockwyz.selected {
+    background: #3b82f6 !important;
+    color: white !important;
+    border-color: #3b82f6 !important;
+  }
+  
+  .day-btn-clockwyz.selected:hover {
+    background: #2563eb !important;
+    border-color: #2563eb !important;
+  }
+  
+  /* Enhanced Preview Event Styling */
+  .preview-event-clockwyz {
+    opacity: 0.8 !important;
+    border: 2px dashed rgba(255, 255, 255, 0.8) !important;
+    animation: previewPulse 2s infinite !important;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(147, 197, 253, 0.9)) !important;
+    transform: scale(1.02) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+  }
+  
+  @keyframes previewPulse {
+    0%, 100% {
+      opacity: 0.8;
+      transform: scale(1.02);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(1.01);
+    }
+  }
+  
+  /* Preview event content styling */
+  .preview-event-clockwyz .event-title-clockwyz {
+    font-weight: 600 !important;
+    margin-bottom: 2px !important;
+  }
+  
+  .preview-event-clockwyz .event-details-clockwyz {
+    font-size: 10px !important;
+    opacity: 0.9 !important;
+  }
+  
+  /* Selected slot highlight */
+  .selected-slot-highlight-clockwyz {
+    position: absolute;
+    background: rgba(59, 130, 246, 0.1) !important;
+    border: 2px solid rgba(59, 130, 246, 0.4) !important;
+    border-radius: 4px !important;
+    pointer-events: none !important;
+    z-index: 5 !important;
+    animation: selectedSlotPulse 1.5s infinite !important;
+  }
+  
+  @keyframes selectedSlotPulse {
+    0%, 100% {
+      background: rgba(59, 130, 246, 0.1);
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+    50% {
+      background: rgba(59, 130, 246, 0.15);
+      border-color: rgba(59, 130, 246, 0.6);
+    }
+  }
+  
+  /* ===== DRAG AND DROP ===== */
+  .drag-ghost-clockwyz {
+    pointer-events: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+  
+  .day-column-clockwyz.drag-over {
+    background: rgba(59, 130, 246, 0.1);
+    border: 2px dashed #3b82f6;
+  }
+  
+  /* ===== RESPONSIVE DESIGN ===== */
+  @media (max-width: 1024px) {
+    .sidebar-clockwyz {
+      position: absolute;
+      z-index: 100;
+      height: 100vh;
+    }
+  
+    .sidebar-clockwyz.collapsed {
+      transform: translateX(-100%);
+    }
+  
+    .main-content-clockwyz {
+      margin-left: 0;
+    }
+  
+    .stat-group-clockwyz {
+      gap: 16px;
+    }
+  
+    .header-left-clockwyz {
+      gap: 16px;
+    }
+  
+    .day-columns-clockwyz {
+      grid-template-columns: repeat(7, minmax(100px, 1fr));
+    }
+  
+    .event-clockwyz {
+      font-size: 12px;
+      padding: 6px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .header-clockwyz {
+      padding: 12px 16px;
+    }
+  
+    .content-clockwyz {
+      padding: 16px;
+    }
+  
+    .page-title-clockwyz {
+      font-size: 20px;
+    }
+  
+    .current-month-clockwyz {
+      font-size: 16px;
+    }
+  
+    .next-event-clockwyz {
+      display: none;
+    }
+  
+    .day-header-clockwyz {
+      padding: 12px 8px;
+    }
+  
+    .day-name-clockwyz {
+      font-size: 11px;
+    }
+  
+    .day-number-clockwyz {
+      font-size: 16px;
+    }
+  
+    .event-title-clockwyz {
+      font-size: 12px;
+    }
+  
+    .event-details-clockwyz {
+      font-size: 10px;
+    }
+  }
+  
+  /* ===== DARK MODE SUPPORT ===== */
+  @media (prefers-color-scheme: dark) {
+    .app-clockwyz {
+      background: #0f172a;
+    }
+  
+    .header-clockwyz {
+      background: #1e293b;
+      border-color: #334155;
+    }
+  
+    .page-title-clockwyz,
+    .current-month-clockwyz {
+      color: #f1f5f9;
+    }
+  
+    .schedule-container-clockwyz {
+      background: #1e293b;
+      border-color: #334155;
+    }
+  
+    .timezone-col-clockwyz,
+    .day-header-clockwyz {
+      background: #334155;
+      border-color: #475569;
+    }
+  
+    .day-name-clockwyz,
+    .day-number-clockwyz {
+      color: #e2e8f0;
+    }
+  
+    .time-axis-clockwyz {
+      background: #334155;
+      border-color: #475569;
+    }
+  
+    .hour-line-clockwyz {
+      border-color: #475569;
+    }
+  
+    .day-column-clockwyz {
+      border-color: #475569;
+    }
+  }
+  
+  /* ===== ACCESSIBILITY ===== */
+  .nav-item-clockwyz:focus,
+  .add-task-btn-clockwyz:focus,
+  .header-action-btn-clockwyz:focus,
+  .day-header-clockwyz:focus,
+  .event-clockwyz:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+  
+  /* ===== ANIMATIONS ===== */
+  .event-clockwyz {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .nav-item-clockwyz {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .day-header-clockwyz {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .day-column-clockwyz {
+    transition: background-color 0.2s ease;
+  }
+  
+  /* ===== REDUCED MOTION ===== */
+  @media (prefers-reduced-motion: reduce) {
+    .event-clockwyz,
+    .nav-item-clockwyz,
+    .day-header-clockwyz,
+    .day-column-clockwyz {
+      transition: none;
+    }
+  
+    .drag-ghost-clockwyz {
+      animation: none;
+    }
+  }
+  
+  /* ===== PRINT STYLES ===== */
+  @media print {
+    .sidebar-clockwyz,
+    .header-action-btn-clockwyz,
+    .add-task-btn-clockwyz {
+      display: none;
+    }
+  
+    .main-content-clockwyz {
+      margin-left: 0;
+    }
+  
+    .schedule-container-clockwyz {
+      box-shadow: none;
+      border: 1px solid #000;
+    }
+  
+    .event-clockwyz {
+      color: #000 !important;
+      background: #f3f4f6 !important;
+      border: 1px solid #d1d5db !important;
+    }
+  }
+  
+  /* ===== HIGH CONTRAST MODE ===== */
+  @media (prefers-contrast: high) {
+    .event-clockwyz {
+      border: 2px solid #000;
+    }
+  
+    .day-column-clockwyz {
+      border-color: #000;
+    }
+  
+    .hour-line-clockwyz {
+      border-color: #000;
+    }
+  }

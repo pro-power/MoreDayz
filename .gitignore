@@ -39,3 +39,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Environment variables
+.env*.local
+
+# Database
+prisma/migrations/*
+!prisma/migrations/.gitkeep
+
+# Testing
+coverage/
+test-results/
+
+# IDE
+.vscode/
+.idea/
