@@ -93,7 +93,14 @@ export function EnhancedScheduleGrid() {
   const [showEventMenu, setShowEventMenu] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [showEventDetails, setShowEventDetails] = useState(false);
+  const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
+
   
+
+  const [isDragInitiated, setIsDragInitiated] = useState(false);
+    const [dragStartPosition, setDragStartPosition] = useState({ x: 0, y: 0 });
+
   // Quick event form state
   const [selectedSlot, setSelectedSlot] = useState<{ 
     day: string; 
@@ -125,11 +132,14 @@ export function EnhancedScheduleGrid() {
   ];
 
   // Generate time slots (6 AM to 11 PM)
-  const timeSlots: TimeSlot[] = Array.from({ length: 17 }, (_, i) => {
-    const hour = i + 6;
+  const timeSlots: TimeSlot[] = Array.from({ length: 24 }, (_, i) => {
+    const hour = i; // 0 to 23
     return {
       hour,
-      label: hour === 12 ? '12pm' : hour < 12 ? `${hour}am` : `${hour - 12}pm`,
+      label: hour === 0 ? '12am' : 
+             hour < 12 ? `${hour}am` : 
+             hour === 12 ? '12pm' : 
+             `${hour - 12}pm`,
       height: 64
     };
   });
@@ -222,12 +232,33 @@ export function EnhancedScheduleGrid() {
     completionRate: 85
   };
 
+  const handleSidebarMouseEnter = () => {
+    // Clear any existing timeout
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+      setHoverTimeout(null);
+    }
+    // Expand immediately on hover
+    setSidebarCollapsed(false);
+  };
+  
+  const handleSidebarMouseLeave = () => {
+    // Set a delay before collapsing
+    const timeout = setTimeout(() => {
+      setSidebarCollapsed(true);
+    }, 300); // 300ms delay
+    
+    setHoverTimeout(timeout);
+  };
+
   // Handle cell click for 15-minute slot selection
   const handleCellClick = (day: string, e: React.MouseEvent<HTMLDivElement>) => {
     if (dragState.isDragging || showQuickEventForm) return;
   
     const rect = e.currentTarget.getBoundingClientRect();
     const containerRect = document.querySelector('.schedule-container-clockwyz')?.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
   
     const relativeY = e.clientY - rect.top;
     const { hour, minute } = pixelsToTime(relativeY);
@@ -241,8 +272,44 @@ export function EnhancedScheduleGrid() {
     const startTime = formatTime(startHour, startMinute);
     const endTime = formatTime(endHour, adjustedEndMinute);
   
-    const popupX = rect.left - 220;
-    const popupY = e.clientY - (containerRect?.top || 0) - 75;
+    // Calculate popup dimensions (approximate)
+    const popupWidth = 300;
+    const popupHeight = 300;
+    
+    // Get the click position relative to the viewport
+    const clickX = e.clientX;
+    const clickY = e.clientY;
+    
+    // Calculate optimal position
+    let popupX = clickX - (popupWidth / 2); // Center horizontally on click
+    let popupY = clickY - 100; // Position above click point
+    
+    // Adjust for right edge overflow
+    if (popupX + popupWidth > viewportWidth - 20) {
+      popupX = viewportWidth - popupWidth - 20;
+    }
+    
+    // Adjust for left edge overflow
+    if (popupX < 20) {
+      popupX = 20;
+    }
+    
+    // Adjust for top edge overflow
+    if (popupY < 20) {
+      popupY = clickY + 20; // Position below click point instead
+    }
+    
+    // Adjust for bottom edge overflow
+    if (popupY + popupHeight > viewportHeight - 20) {
+      popupY = viewportHeight - popupHeight - 20;
+    }
+    
+    console.log('Popup positioning:', {
+      clickPosition: { x: clickX, y: clickY },
+      calculatedPosition: { x: popupX, y: popupY },
+      viewport: { width: viewportWidth, height: viewportHeight },
+      popup: { width: popupWidth, height: popupHeight }
+    });
   
     setSelectedSlot({ day, startTime, endTime, x: popupX, y: popupY });
     setQuickEventData({
@@ -254,7 +321,7 @@ export function EnhancedScheduleGrid() {
     });
     setEventDuration(15);
   
-    // Create initial preview event with proper timing
+    // Create initial preview event
     const startDate = new Date();
     startDate.setHours(startHour, startMinute, 0, 0);
     const endDate = new Date();
@@ -389,20 +456,32 @@ export function EnhancedScheduleGrid() {
   const handleCreateEvent = () => {
     if (!previewEvent || !selectedSlot) return;
     
-    // Create the actual event with proper timing
+    // Get current date but preserve the selected day
+    const today = new Date();
+    const dayIndex = weekDays.indexOf(selectedSlot.day);
+    const selectedDate = new Date(today);
+    selectedDate.setDate(today.getDate() - today.getDay() + dayIndex + 1); // +1 because weekDays starts with Monday
+    
+    // Parse start time properly
     const startTime = parseTime(selectedSlot.startTime);
-    const startDate = new Date();
+    const startDate = new Date(selectedDate);
     startDate.setHours(startTime.hour, startTime.minute, 0, 0);
     
-    const endMinutes = (startTime.hour * 60 + startTime.minute) + eventDuration;
-    const endHour = Math.floor(endMinutes / 60);
-    const endMinute = endMinutes % 60;
-    const endDate = new Date();
-    endDate.setHours(endHour, endMinute, 0, 0);
+    // Calculate end time based on duration
+    const endDate = new Date(startDate);
+    endDate.setMinutes(endDate.getMinutes() + eventDuration);
+    
+    console.log('Creating event:', {
+      title: quickEventData.title,
+      startTime: startDate,
+      endTime: endDate,
+      duration: eventDuration,
+      day: selectedSlot.day
+    });
     
     const newEvent: ScheduleEvent = {
       id: Date.now().toString(),
-      title: quickEventData.title || 'Untitled Event',
+      title: quickEventData.title || 'No Title',
       type: quickEventData.type,
       startTime: startDate,
       endTime: endDate,
@@ -480,29 +559,34 @@ export function EnhancedScheduleGrid() {
 
   // Calculate event position and styling
   const getEventStyle = (event: ScheduleEvent) => {
-    const startTime = parseTime(event.startTime.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      hour12: true 
-    }));
-    const endTime = parseTime(event.endTime.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      hour12: true 
-    }));
+    // Get hours and minutes directly from Date objects
+    const startHour = event.startTime.getHours();
+    const startMinute = event.startTime.getMinutes();
+    const endHour = event.endTime.getHours();
+    const endMinute = event.endTime.getMinutes();
     
-    const topPosition = timeToPixels(startTime.hour, startTime.minute);
-    const bottomPosition = timeToPixels(endTime.hour, endTime.minute);
+    // Calculate positions using our utility functions
+    const topPosition = timeToPixels(startHour, startMinute);
+    const bottomPosition = timeToPixels(endHour, endMinute);
     const height = bottomPosition - topPosition;
+    
+    console.log('Event style calculation:', {
+      event: event.title,
+      startTime: `${startHour}:${startMinute}`,
+      endTime: `${endHour}:${endMinute}`,
+      topPosition,
+      height,
+      duration: event.duration
+    });
     
     return {
       top: `${topPosition}px`,
-      height: `${Math.max(height, 16)}px`,
+      height: `${Math.max(height, 16)}px`, // Minimum 16px height for visibility
       backgroundColor: event.color,
       borderLeft: event.hasConflict ? '4px solid #ef4444' : event.isLocked ? '4px solid #059669' : 'none',
       opacity: event.isCompleted ? 0.6 : 1,
       zIndex: event.hasConflict ? 20 : 10,
-      cursor: event.isLocked ? 'not-allowed' : 'grab'
+      cursor: event.isLocked ? 'not-allowed' : 'pointer'
     };
   };
 
@@ -513,14 +597,78 @@ export function EnhancedScheduleGrid() {
   };
 
   const handleEventClick = (event: ScheduleEvent, e: React.MouseEvent) => {
-    if (dragState.isDragging) return;
-    
     e.preventDefault();
     e.stopPropagation();
-    setSelectedEvent(event);
-    setMenuPosition({ x: e.clientX, y: e.clientY });
-    setShowEventMenu(true);
+    
+    console.log('Event clicked:', event);
+    
+    // Only show details if not currently being dragged
+    if (!dragState.isDragging) {
+      setSelectedEvent(event);
+      setShowEventDetails(true);
+      // Close the context menu if it was open
+      setShowEventMenu(false);
+    }
   };
+
+
+const handleMouseDown = (event: ScheduleEvent, e: React.MouseEvent) => {
+  if (event.isLocked) return;
+  
+  e.preventDefault();
+  setDragStartPosition({ x: e.clientX, y: e.clientY });
+  setIsDragInitiated(true);
+  
+  // Don't start drag immediately - wait for mouse move
+};
+
+const handleMouseMove = (e: React.MouseEvent) => {
+  if (isDragInitiated && !dragState.isDragging) {
+    const deltaX = Math.abs(e.clientX - dragStartPosition.x);
+    const deltaY = Math.abs(e.clientY - dragStartPosition.y);
+    
+    // Only start drag if mouse moved more than 5px
+    if (deltaX > 5 || deltaY > 5) {
+      // Find the event being dragged
+      const draggedEvent = events.find(evt => 
+        evt.id === selectedEvent?.id || 
+        (e.target as HTMLElement).closest('[data-event-id]')?.getAttribute('data-event-id') === evt.id
+      );
+      
+      if (draggedEvent) {
+        setDragState({
+          isDragging: true,
+          draggedEvent,
+          initialPosition: dragStartPosition,
+          currentPosition: { x: e.clientX, y: e.clientY },
+          targetSlot: null
+        });
+        setShowEventDetails(false); // Close sidebar during drag
+      }
+    }
+  }
+  
+  // Continue with existing drag move logic if already dragging
+  if (dragState.isDragging) {
+    setDragState({
+      ...dragState,
+      currentPosition: { x: e.clientX, y: e.clientY }
+    });
+  }
+};
+
+const handleMouseUp = (e: React.MouseEvent) => {
+  if (isDragInitiated && !dragState.isDragging) {
+    // This was just a click, not a drag
+    setIsDragInitiated(false);
+    // Click handling is done in handleEventClick
+  } else if (dragState.isDragging) {
+    // Handle drag end
+    handleDragEnd(e);
+  }
+  
+  setIsDragInitiated(false);
+};
 
   const handleEventAction = (action: string) => {
     if (!selectedEvent) return;
@@ -552,22 +700,21 @@ export function EnhancedScheduleGrid() {
 
   // Components
   const Sidebar = () => (
-    <div className={cn('sidebar-clockwyz', sidebarCollapsed && 'collapsed')}>
+    <div 
+      className={cn('sidebar-clockwyz', sidebarCollapsed && 'collapsed')}
+      onMouseEnter={handleSidebarMouseEnter}
+      onMouseLeave={handleSidebarMouseLeave}
+    >
       <div className="sidebar-header-clockwyz">
         <div className="logo-clockwyz">
           <Zap className="logo-icon-clockwyz" />
-          {!sidebarCollapsed && <span className="logo-text-clockwyz">MoreDayz</span>}
+          {!sidebarCollapsed && (
+            <span className="logo-text-clockwyz">MoreDayz</span>
+          )}
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          className="collapse-btn-clockwyz"
-        >
-          <ChevronLeft className={cn('w-4 h-4', sidebarCollapsed && 'rotate-180')} />
-        </Button>
+        {/* Remove the collapse button entirely */}
       </div>
-
+  
       <nav className="sidebar-nav-clockwyz">
         {navigationItems.map((item) => (
           <Button
@@ -575,6 +722,7 @@ export function EnhancedScheduleGrid() {
             variant={currentView === item.id ? 'default' : 'ghost'}
             className={cn('nav-item-clockwyz', currentView === item.id && 'active')}
             onClick={() => setCurrentView(item.id)}
+            title={sidebarCollapsed ? item.label : undefined}
           >
             <item.icon className="nav-icon-clockwyz" />
             {!sidebarCollapsed && (
@@ -590,26 +738,35 @@ export function EnhancedScheduleGrid() {
           </Button>
         ))}
       </nav>
-
+  
       {!sidebarCollapsed && (
         <div className="sidebar-stats-clockwyz">
           <div className="stats-header-clockwyz">This Week</div>
           <div className="stat-item-clockwyz">
-            <Clock className="w-4 h-4" />
+            <Clock className="w-3 h-3" />
             <span>{academicStats.weeklyFocus.current}h Focus</span>
           </div>
           <div className="stat-item-clockwyz">
-            <BookOpen className="w-4 h-4" />
+            <BookOpen className="w-3 h-3" />
             <span>{academicStats.studyHours.current}h Study</span>
           </div>
           <div className="stat-item-clockwyz">
-            <Target className="w-4 h-4" />
+            <Target className="w-3 h-3" />
             <span>{academicStats.assignmentsDue} Due</span>
           </div>
         </div>
       )}
     </div>
   );
+  
+  // 5. Cleanup timeout on component unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeout) {
+        clearTimeout(hoverTimeout);
+      }
+    };
+  }, [hoverTimeout]);
 
   const Header = () => (
     <header className="header-clockwyz">
@@ -824,13 +981,14 @@ const [planWorkData, setPlanWorkData] = useState<PlanWorkData>({
     return (
       <>
         <div 
-          className="task-popup-clockwyz" 
-          style={{
-            position: 'absolute',
-            left: `${selectedSlot.x}px`,
-            top: `${selectedSlot.y}px`,
-          }}
-        >
+  className="task-popup-clockwyz" 
+  style={{
+    position: 'fixed', // Changed from absolute to fixed
+    left: `${selectedSlot.x}px`,
+    top: `${selectedSlot.y}px`,
+    zIndex: 1001,
+  }}
+>
           {/* Tab Header */}
           <div className="popup-tabs-clockwyz">
             <button 
@@ -1248,7 +1406,7 @@ const [planWorkData, setPlanWorkData] = useState<PlanWorkData>({
                     >
                         <div className="event-content-clockwyz">
                         <div className="event-title-clockwyz">
-                            <span className="event-emoji-clockwyz">{previewEvent.emoji}</span>
+                            {/* <span className="event-emoji-clockwyz">{previewEvent.emoji}</span> */}
                             <span className="title-text-clockwyz">
                             {getPreviewEventDisplay(previewEvent)}
                             </span>
@@ -1266,57 +1424,62 @@ const [planWorkData, setPlanWorkData] = useState<PlanWorkData>({
                   {events
                     .filter(event => event.day === dayInfo.day)
                     .map((event) => (
-                    <motion.div
-                      key={event.id}
-                      className={cn(
-                        'event-clockwyz',
-                        event.type,
-                        event.isLocked && 'locked'
-                      )}
-                      style={getEventStyle(event)}
-                      whileHover={{ scale: 1.02, zIndex: 30 }}
-                      onMouseDown={(e) => handleDragStart(event, e)}
-                      onContextMenu={(e) => handleEventClick(event, e)}
-                      onClick={(e) => handleEventClick(event, e)}
-                      transition={{ duration: 0.2 }}
-                      drag={!event.isLocked}
-                      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-                      dragElastic={0}
-                    >
-                      <div className="event-content-clockwyz">
-                        <div className="event-title-clockwyz">
-                          {event.isLocked && <Lock className="w-3 h-3 lock-icon-clockwyz" />}
-                          {event.emoji && <span className="event-emoji-clockwyz">{event.emoji}</span>}
-                          <span className="title-text-clockwyz">{event.title}</span>
-                          {event.priority === Priority.HIGH && <span className="priority-indicator-clockwyz">!</span>}
-                        </div>
-                        <div className="event-details-clockwyz">
-                          <span className="event-time-clockwyz">
-                            {event.startTime.toLocaleTimeString('en-US', { 
-                              hour: 'numeric', 
-                              minute: '2-digit', 
-                              hour12: true 
-                            })} - {event.endTime.toLocaleTimeString('en-US', { 
-                              hour: 'numeric', 
-                              minute: '2-digit', 
-                              hour12: true 
-                            })}
-                          </span>
-                          {event.location && <span className="event-location-clockwyz">{event.location}</span>}
-                          {event.course && <span className="event-course-clockwyz">{event.course}</span>}
-                        </div>
-                      </div>
-                      {event.hasConflict && (
-                        <div className="conflict-indicator-clockwyz">
-                          <AlertTriangle className="w-3 h-3" />
-                        </div>
-                      )}
-                      {!event.isLocked && (
-                        <div className="drag-handle-clockwyz">
-                          <Move className="w-3 h-3" />
-                        </div>
-                      )}
-                    </motion.div>
+                        <motion.div
+  key={event.id}
+  data-event-id={event.id}
+  className={cn(
+    'event-clockwyz',
+    event.type,
+    event.isLocked && 'locked'
+  )}
+  style={getEventStyle(event)}
+  whileHover={{ scale: 1.02, zIndex: 30 }}
+  onClick={(e) => handleEventClick(event, e)}
+  onContextMenu={(e) => {
+    e.preventDefault();
+    setMenuPosition({ x: e.clientX, y: e.clientY });
+    setSelectedEvent(event);
+    setShowEventMenu(true);
+  }}
+  transition={{ duration: 0.2 }}
+  drag={!event.isLocked}
+  dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+  dragElastic={0}
+  onDragStart={(e) => {
+    if (!event.isLocked) {
+      setShowEventDetails(false); // Close sidebar during drag
+    }
+  }}
+>
+  <div className="event-content-clockwyz">
+    <div className="event-title-clockwyz">
+      {event.isLocked && <Lock className="w-3 h-3 lock-icon-clockwyz" />}
+      {/* {event.emoji && <span className="event-emoji-clockwyz">{event.emoji}</span>} */}
+      <span className="title-text-clockwyz">{event.title}</span>
+      {event.priority === Priority.HIGH && <span className="priority-indicator-clockwyz">!</span>}
+    </div>
+    <div className="event-details-clockwyz">
+      <span className="event-time-clockwyz">
+        {event.startTime.toLocaleTimeString('en-US', { 
+          hour: 'numeric', 
+          minute: '2-digit', 
+          hour12: true 
+        })} - {event.endTime.toLocaleTimeString('en-US', { 
+          hour: 'numeric', 
+          minute: '2-digit', 
+          hour12: true 
+        })}
+      </span>
+      {event.location && <span className="event-location-clockwyz">{event.location}</span>}
+      {event.course && <span className="event-course-clockwyz">{event.course}</span>}
+    </div>
+  </div>
+  {event.hasConflict && (
+    <div className="conflict-indicator-clockwyz">
+      <AlertTriangle className="w-3 h-3" />
+    </div>
+  )}
+</motion.div>
                   ))}
                 </div>
               </div>
@@ -1326,6 +1489,220 @@ const [planWorkData, setPlanWorkData] = useState<PlanWorkData>({
       </div>
     </div>
   );
+
+  // Add this component to enhanced-schedule-grid.tsx after the existing components
+
+// Replace the EventDetailsSidebar component in enhanced-schedule-grid.tsx
+
+const EventDetailsSidebar = () => {
+    if (!selectedEvent || !showEventDetails) return null;
+  
+    const formatEventTime = (date: Date) => {
+      return date.toLocaleTimeString('en-US', { 
+        hour: 'numeric', 
+        minute: '2-digit', 
+        hour12: true 
+      });
+    };
+  
+    const formatEventDate = (date: Date) => {
+      return date.toLocaleDateString('en-US', { 
+        weekday: 'long',
+        month: 'long', 
+        day: 'numeric' 
+      });
+    };
+  
+    const getDuration = () => {
+      const diffMs = selectedEvent.endTime.getTime() - selectedEvent.startTime.getTime();
+      const diffMins = Math.round(diffMs / 60000);
+      const hours = Math.floor(diffMins / 60);
+      const minutes = diffMins % 60;
+      
+      if (hours === 0) return `${minutes} minutes`;
+      if (minutes === 0) return `${hours} hour${hours > 1 ? 's' : ''}`;
+      return `${hours} hour${hours > 1 ? 's' : ''} ${minutes} minutes`;
+    };
+  
+    const handleCloseSidebar = () => {
+      setShowEventDetails(false);
+      setSelectedEvent(null);
+    };
+  
+    return (
+      <motion.div
+        initial={{ x: 400, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        exit={{ x: 400, opacity: 0 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className="event-details-sidebar-clockwyz"
+      >
+        {/* Header with Close Button */}
+        <div className="sidebar-header-details-clockwyz">
+          <div className="header-left-sidebar-clockwyz">
+            <div className="event-type-badge-clockwyz" style={{ backgroundColor: selectedEvent.color }}>
+              <span className="event-emoji-clockwyz">{selectedEvent.emoji || '📅'}</span>
+              <span>{selectedEvent.type?.toUpperCase() || 'EVENT'}</span>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleCloseSidebar}
+            className="close-sidebar-btn-clockwyz"
+          >
+            <X className="w-5 h-5" />
+          </Button>
+        </div>
+  
+        {/* Event Details */}
+        <div className="sidebar-content-details-clockwyz">
+          <div className="event-title-section-clockwyz">
+            <h2 className="event-title-large-clockwyz">{selectedEvent.title || 'No Title'}</h2>
+            {selectedEvent.isLocked && (
+              <div className="locked-indicator-clockwyz">
+                <Lock className="w-4 h-4" />
+                <span>Locked Event</span>
+              </div>
+            )}
+          </div>
+  
+          {/* Time Information */}
+          <div className="time-section-clockwyz">
+            <div className="time-info-header-clockwyz">
+              <Clock className="w-5 h-5" />
+              <span className="section-title-clockwyz">Schedule</span>
+            </div>
+            
+            <div className="time-details-clockwyz">
+              <div className="time-row-details-clockwyz">
+                <span className="time-label-clockwyz">Date:</span>
+                <span className="time-value-clockwyz">{formatEventDate(selectedEvent.startTime)}</span>
+              </div>
+              
+              <div className="time-row-details-clockwyz">
+                <span className="time-label-clockwyz">Time:</span>
+                <span className="time-value-clockwyz">
+                  {formatEventTime(selectedEvent.startTime)} - {formatEventTime(selectedEvent.endTime)}
+                </span>
+              </div>
+              
+              <div className="time-row-details-clockwyz">
+                <span className="time-label-clockwyz">Duration:</span>
+                <span className="time-value-clockwyz">{getDuration()}</span>
+              </div>
+            </div>
+          </div>
+  
+          {/* Additional Details */}
+          {(selectedEvent.location || selectedEvent.course || selectedEvent.description) && (
+            <div className="additional-details-clockwyz">
+              <div className="section-header-clockwyz">
+                <span className="section-title-clockwyz">Details</span>
+              </div>
+              
+              {selectedEvent.location && (
+                <div className="detail-row-clockwyz">
+                  <span className="detail-label-clockwyz">Location:</span>
+                  <span className="detail-value-clockwyz">{selectedEvent.location}</span>
+                </div>
+              )}
+              
+              {selectedEvent.course && (
+                <div className="detail-row-clockwyz">
+                  <span className="detail-label-clockwyz">Course:</span>
+                  <span className="detail-value-clockwyz">{selectedEvent.course}</span>
+                </div>
+              )}
+              
+              {selectedEvent.description && (
+                <div className="detail-row-clockwyz">
+                  <span className="detail-label-clockwyz">Description:</span>
+                  <p className="description-text-clockwyz">{selectedEvent.description}</p>
+                </div>
+              )}
+            </div>
+          )}
+  
+          {/* Priority Indicator */}
+          {selectedEvent.priority && (
+            <div className="priority-section-clockwyz">
+              <Target className="w-4 h-4" />
+              <span className={`priority-badge-clockwyz priority-${selectedEvent.priority}`}>
+                {selectedEvent.priority.toUpperCase()} PRIORITY
+              </span>
+            </div>
+          )}
+  
+          {/* Status */}
+          <div className="status-section-clockwyz">
+            {selectedEvent.isCompleted ? (
+              <div className="status-completed-clockwyz">
+                <CheckCircle className="w-4 h-4" />
+                <span>Completed</span>
+              </div>
+            ) : (
+              <div className="status-pending-clockwyz">
+                <Clock className="w-4 h-4" />
+                <span>Scheduled</span>
+              </div>
+            )}
+          </div>
+        </div>
+  
+        {/* Action Buttons */}
+        <div className="sidebar-actions-clockwyz">
+          <Button
+            onClick={() => {
+              handleEventAction('edit');
+              handleCloseSidebar();
+            }}
+            className="action-btn-clockwyz edit-btn-clockwyz"
+          >
+            <Edit className="w-4 h-4" />
+            Edit Event
+          </Button>
+          
+          <div className="action-row-clockwyz">
+            <Button
+              onClick={() => {
+                handleEventAction('duplicate');
+                handleCloseSidebar();
+              }}
+              variant="outline"
+              className="action-btn-clockwyz secondary-btn-clockwyz"
+            >
+              <Copy className="w-4 h-4" />
+              Duplicate
+            </Button>
+            
+            <Button
+              onClick={() => {
+                handleEventAction('complete');
+              }}
+              variant="outline"
+              className="action-btn-clockwyz secondary-btn-clockwyz"
+            >
+              <CheckCircle className="w-4 h-4" />
+              {selectedEvent.isCompleted ? 'Incomplete' : 'Complete'}
+            </Button>
+          </div>
+          
+          <Button
+            onClick={() => {
+              handleEventAction('delete');
+              handleCloseSidebar();
+            }}
+            variant="destructive"
+            className="action-btn-clockwyz delete-btn-clockwyz"
+          >
+            <Trash2 className="w-4 h-4" />
+            Delete Event
+          </Button>
+        </div>
+      </motion.div>
+    );
+  };
 
   // Event Context Menu
   const EventMenu = () => {
@@ -1396,7 +1773,7 @@ const [planWorkData, setPlanWorkData] = useState<PlanWorkData>({
   return (
     <div className="app-clockwyz">
       <Sidebar />
-      <div className="main-content-clockwyz">
+      <div className={cn("main-content-clockwyz", showEventDetails && "sidebar-open")}>
         <Header />
         
         <div className="content-clockwyz">
@@ -1404,25 +1781,37 @@ const [planWorkData, setPlanWorkData] = useState<PlanWorkData>({
           
           {/* Conflicts Alert */}
           <AnimatePresence>
-            {conflicts.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="conflicts-alert-clockwyz"
-              >
-                <AlertTriangle className="w-5 h-5" />
-                <span>Your events are being displayed as they will to others.</span>
-                <Button variant="ghost" size="sm" className="alert-dismiss-clockwyz">
-                  <XCircle className="w-4 h-4" />
-                </Button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          {conflicts.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="conflicts-alert-clockwyz"
+            >
+              <AlertTriangle className="w-5 h-5" />
+              <span>Your events are being displayed as they will to others.</span>
+              <Button variant="ghost" size="sm" className="alert-dismiss-clockwyz">
+                <XCircle className="w-4 h-4" />
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+          <div 
+          className="schedule-container-clockwyz"
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+        >
 
           <ScheduleGrid />
+          </div>
         </div>
       </div>
+
+      {/* Event Details Sidebar */}
+<AnimatePresence>
+  {showEventDetails && selectedEvent && <EventDetailsSidebar />}
+</AnimatePresence>
 
       <AnimatePresence>
         <EventMenu />
@@ -1440,29 +1829,29 @@ const [planWorkData, setPlanWorkData] = useState<PlanWorkData>({
 
       {/* Drag Ghost */}
       {dragState.isDragging && dragState.draggedEvent && (
-        <motion.div
-          className="drag-ghost-clockwyz"
-          style={{
-            position: 'fixed',
-            left: dragState.currentPosition.x - 50,
-            top: dragState.currentPosition.y - 20,
-            width: '150px',
-            height: '40px',
-            background: dragState.draggedEvent.color,
-            borderRadius: '6px',
-            padding: '8px',
-            color: 'white',
-            fontSize: '12px',
-            fontWeight: '600',
-            zIndex: 1000,
-            pointerEvents: 'none',
-            opacity: 0.8
-          }}
-          initial={{ scale: 1 }}
-          animate={{ scale: 1.1 }}
-        >
-          {dragState.draggedEvent.title}
-        </motion.div>
+      <motion.div
+        className="drag-ghost-clockwyz"
+        style={{
+          position: 'fixed',
+          left: dragState.currentPosition.x - 50,
+          top: dragState.currentPosition.y - 20,
+          width: '150px',
+          height: '40px',
+          background: dragState.draggedEvent.color,
+          borderRadius: '6px',
+          padding: '8px',
+          color: 'white',
+          fontSize: '12px',
+          fontWeight: '600',
+          zIndex: 1000,
+          pointerEvents: 'none',
+          opacity: 0.8
+        }}
+        initial={{ scale: 1 }}
+        animate={{ scale: 1.1 }}
+      >
+        {dragState.draggedEvent.title}
+      </motion.div>
       )}
     </div>
   );

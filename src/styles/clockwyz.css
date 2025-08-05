@@ -9,129 +9,238 @@
   }
   
   /* ===== SIDEBAR STYLES ===== */
-  .sidebar-clockwyz {
-    width: 280px;
+/* ===== HOVER-BASED SIDEBAR STYLES ===== */
+.sidebar-clockwyz {
+    width: 240px;
     background: #1e293b;
     border-right: 1px solid #334155;
     display: flex;
     flex-direction: column;
-    transition: width 0.3s ease;
+    transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 150;
   }
   
   .sidebar-clockwyz.collapsed {
-    width: 64px;
+    width: 56px;
   }
   
+  /* Hover hint for collapsed state */
+  .sidebar-hover-hint-clockwyz {
+    position: absolute;
+    right: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    transition: all 0.3s ease;
+    opacity: 0.7;
+    animation: breathe 2s ease-in-out infinite;
+  }
+  
+  @keyframes breathe {
+    0%, 100% {
+      transform: translateY(-50%) scale(1);
+      opacity: 0.7;
+    }
+    50% {
+      transform: translateY(-50%) scale(1.1);
+      opacity: 1;
+    }
+  }
+  
+  .sidebar-clockwyz.collapsed:hover .sidebar-hover-hint-clockwyz {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.8);
+  }
+  
+  /* Enhanced hover effects */
+  .sidebar-clockwyz.collapsed {
+    cursor: pointer;
+  }
+  
+  .sidebar-clockwyz.collapsed::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba(59, 130, 246, 0.02)
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  
+  .sidebar-clockwyz.collapsed:hover::before {
+    opacity: 1;
+  }
+  
+  /* Smooth expansion animation */
+  .sidebar-clockwyz:not(.collapsed) {
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Header adjustments - remove collapse button styles */
   .sidebar-header-clockwyz {
-    padding: 24px;
+    padding: 16px 12px;
     border-bottom: 1px solid #334155;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    min-height: 60px;
   }
   
   .logo-clockwyz {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+    flex: 1;
   }
   
   .logo-icon-clockwyz {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-    border-radius: 8px;
-    padding: 6px;
-    color: white;
-  }
-  
-  .logo-text-clockwyz {
-    font-size: 20px;
-    font-weight: 600;
-    color: white;
-  }
-  
-  .collapse-btn-clockwyz {
-    background: none;
-    border: none;
-    color: #64748b;
-    cursor: pointer;
+    border-radius: 6px;
     padding: 4px;
-    border-radius: 4px;
-    transition: all 0.2s;
-  }
-  
-  .collapse-btn-clockwyz:hover {
-    background: #334155;
     color: white;
-  }
-  
-  .sidebar-nav-clockwyz {
-    flex: 1;
-    padding: 16px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  
-  .nav-item-clockwyz {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-    margin-bottom: 4px;
-    background: none;
-    border: none;
-    border-radius: 8px;
-    color: #94a3b8;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 14px;
-    font-weight: 500;
-    justify-content: flex-start;
-  }
-  
-  .nav-item-clockwyz:hover {
-    background: #334155;
-    color: white;
-  }
-  
-  .nav-item-clockwyz.active {
-    background: #1e40af;
-    color: white;
-  }
-  
-  .nav-icon-clockwyz {
-    width: 20px;
-    height: 20px;
     flex-shrink: 0;
   }
   
-  .nav-label-clockwyz {
+  .logo-text-clockwyz {
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .sidebar-clockwyz:not(.collapsed) .logo-text-clockwyz {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.1s;
+  }
+  
+  /* Navigation improvements */
+  .sidebar-nav-clockwyz {
     flex: 1;
-    text-align: left;
+    padding: 8px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .nav-item-clockwyz {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 12px !important;
+    margin-bottom: 0 !important;
+    background: none !important;
+    border: none !important;
+    border-radius: 6px !important;
+    color: #94a3b8 !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    justify-content: flex-start !important;
+    min-height: 36px !important;
+    position: relative !important;
+    overflow: hidden !important;
+  }
+  
+  .nav-item-clockwyz:hover {
+    background: #334155 !important;
+    color: white !important;
+    transform: translateX(2px) !important;
+  }
+  
+  .nav-item-clockwyz.active {
+    background: #1e40af !important;
+    color: white !important;
+  }
+  
+  .nav-icon-clockwyz {
+    width: 16px !important;
+    height: 16px !important;
+    flex-shrink: 0 !important;
+    z-index: 2 !important;
+  }
+  
+  .nav-label-clockwyz {
+    flex: 1 !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    opacity: 0 !important;
+    transform: translateX(-10px) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+  
+  .sidebar-clockwyz:not(.collapsed) .nav-label-clockwyz {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+    transition-delay: 0.05s !important;
   }
   
   .nav-badge-clockwyz {
-    background: #10b981;
-    color: white;
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 12px;
+    background: #10b981 !important;
+    color: white !important;
+    font-size: 10px !important;
+    padding: 2px 6px !important;
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    line-height: 1 !important;
+    opacity: 0 !important;
+    transform: scale(0.8) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
   
+  .sidebar-clockwyz:not(.collapsed) .nav-badge-clockwyz {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+    transition-delay: 0.1s !important;
+  }
+  
+  /* Stats section animations */
   .sidebar-stats-clockwyz {
-    padding: 16px 24px;
+    padding: 12px 16px;
     border-top: 1px solid #334155;
+    background: rgba(15, 23, 42, 0.5);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .sidebar-clockwyz:not(.collapsed) .sidebar-stats-clockwyz {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.2s;
   }
   
   .stats-header-clockwyz {
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
     color: #64748b;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -139,10 +248,95 @@
   .stat-item-clockwyz {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 6px 0;
+    gap: 6px;
+    padding: 4px 0;
     color: #94a3b8;
-    font-size: 13px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  
+  /* Collapsed state adjustments */
+  .sidebar-clockwyz.collapsed .nav-item-clockwyz {
+    justify-content: center !important;
+    padding: 10px !important;
+    margin-bottom: 4px;
+    width: 40px;
+    height: 40px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .sidebar-clockwyz.collapsed .nav-item-clockwyz:hover {
+    transform: scale(1.1) !important;
+  }
+  
+  /* Tooltips for collapsed state */
+  .sidebar-clockwyz.collapsed .nav-item-clockwyz[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 6px 10px;
+    background: #1f2937;
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 6px;
+    white-space: nowrap;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: tooltipSlideIn 0.2s ease-out;
+    pointer-events: none;
+  }
+  
+  .sidebar-clockwyz.collapsed .nav-item-clockwyz[title]:hover::before {
+    content: '';
+    position: absolute;
+    left: calc(100% + 6px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 6px solid #1f2937;
+    z-index: 1001;
+    pointer-events: none;
+  }
+  
+  @keyframes tooltipSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-50%) translateX(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(-50%) translateX(0);
+    }
+  }
+  
+  /* Mobile responsive */
+  @media (max-width: 1024px) {
+    .sidebar-clockwyz {
+      position: fixed;
+      z-index: 200;
+      height: 100vh;
+      box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+    }
+  
+    .sidebar-clockwyz.collapsed {
+      transform: translateX(-100%);
+    }
+  
+    .main-content-clockwyz {
+      margin-left: 0;
+    }
+    
+    /* Disable hover on mobile - require tap */
+    .sidebar-clockwyz.collapsed .sidebar-hover-hint-clockwyz {
+      display: none;
+    }
   }
   
   /* ===== MAIN CONTENT STYLES ===== */
@@ -438,7 +632,7 @@
   .calendar-main-clockwyz {
     display: grid;
     grid-template-columns: 80px 1fr;
-    min-height: 1088px; /* 17 hours * 64px = 1088px */
+    min-height: 1536px; /* 24 hours * 64px = 1536px */
   }
   
   .time-axis-clockwyz {
@@ -471,7 +665,7 @@
   .calendar-content-clockwyz {
     position: relative;
     overflow: hidden;
-    height: 1088px; /* Match the total height */
+    height: 1536px; /* Match the total height */
   }
   
   .hour-grid-clockwyz {
@@ -503,7 +697,7 @@
     grid-template-columns: repeat(7, 1fr);
     position: relative;
     z-index: 2;
-    height: 1088px; /* Fixed height to match time axis */
+    height: 1536px; /* Fixed height to match time axis */
   }
   
   .day-column-clockwyz {
@@ -602,22 +796,20 @@
   .event-title-clockwyz {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 1px;
     font-weight: 600;
     margin-bottom: 2px;
-    line-height: 1.3;
+    line-height: 0.8;
   }
   
   .lock-icon-clockwyz {
     opacity: 0.8;
   }
   
-  .event-emoji-clockwyz {
-    font-size: 12px;
-  }
   
   .title-text-clockwyz {
     flex: 1;
+    font-size: 9px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -639,7 +831,7 @@
   .event-time-clockwyz,
   .event-location-clockwyz,
   .event-course-clockwyz {
-    font-size: 11px;
+    font-size: 8px;
     line-height: 1.2;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -735,17 +927,13 @@
     border-top: 1px solid #e5e7eb;
   }
   
-  /* Force override for popup form - add this to your CSS file */
-
-/* Container */
-/* Force override for popup form - add this to your CSS file */
-
+  /* Force override for popup form 
 /* Container */
 .task-popup-clockwyz {
     background: white !important;
     border: 1px solid #e2e8f0 !important;
     border-radius: 8px !important;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
     z-index: 1001 !important;
     padding: 0 !important;
     width: 300px !important;
@@ -753,7 +941,10 @@
     display: flex !important;
     flex-direction: column !important;
     overflow: hidden !important;
-  }
+    /* Ensure popup stays within viewport */
+    max-width: calc(100vw - 40px) !important;
+    max-height: calc(100vh - 40px) !important;
+}
   
   /* Tabs */
   .popup-tabs-clockwyz {
@@ -1059,6 +1250,80 @@
     background: rgba(0, 0, 0, 0.1) !important;
     z-index: 1000 !important;
   }
+
+  /* Add arrow pointer to show which cell was clicked */
+.task-popup-clockwyz::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid white;
+    filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.1));
+    z-index: 1002;
+  }
+  
+  .task-popup-clockwyz::after {
+    content: '';
+    position: absolute;
+    top: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid #e2e8f0;
+    z-index: 1001;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .task-popup-clockwyz {
+      width: calc(100vw - 40px) !important;
+      height: auto !important;
+      max-height: calc(100vh - 100px) !important;
+      left: 20px !important;
+      right: 20px !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+    }
+    
+    /* Remove arrow on mobile */
+    .task-popup-clockwyz::before,
+    .task-popup-clockwyz::after {
+      display: none;
+    }
+  }
+  
+  /* Ensure popup content is scrollable if needed */
+  .popup-content-clockwyz {
+    flex: 1 !important;
+    padding: 16px !important;
+    overflow-y: auto !important;
+    max-height: calc(300px - 120px) !important; /* Account for header and footer */
+  }
+  
+  /* Improve mobile experience */
+  @media (max-width: 480px) {
+    .task-popup-clockwyz {
+      width: calc(100vw - 20px) !important;
+      left: 10px !important;
+      font-size: 14px !important;
+    }
+    
+    .popup-content-clockwyz {
+      padding: 12px !important;
+    }
+    
+    .popup-content-clockwyz input[type="text"]:not(.duration-input-clockwyz) {
+      font-size: 16px !important; /* Prevent zoom on iOS */
+    }
+  }
   
   /* Plan Work Tab - Days Selector */
   .days-selector-clockwyz {
@@ -1102,8 +1367,309 @@
     border: 2px dashed rgba(255, 255, 255, 0.8) !important;
     animation: previewPulse 2s infinite !important;
     background: linear-gradient(135deg, rgba(59, 130, 246, 0.9), rgba(147, 197, 253, 0.9)) !important;
-    transform: scale(1.02) !important;
+    transform: scale(1.02);
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+  }
+
+
+/* ===== EVENT DETAILS SIDEBAR ===== */
+.event-details-sidebar-clockwyz {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 100vh;
+    background: white;
+    border-left: 1px solid #e2e8f0;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  .sidebar-header-details-clockwyz {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    min-height: 80px;
+  }
+  
+  .header-left-sidebar-clockwyz {
+    flex: 1;
+  }
+  
+  .event-type-badge-clockwyz {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 24px;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .close-sidebar-btn-clockwyz {
+    background: none !important;
+    border: none !important;
+    color: #64748b !important;
+    cursor: pointer !important;
+    padding: 12px !important;
+    border-radius: 8px !important;
+    transition: all 0.2s !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  .close-sidebar-btn-clockwyz:hover {
+    background: #f1f5f9 !important;
+    color: #1e293b !important;
+  }
+  
+  .sidebar-content-details-clockwyz {
+    flex: 1;
+    padding: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .event-title-section-clockwyz {
+    padding: 24px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  
+  .event-title-large-clockwyz {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 12px 0;
+    line-height: 1.3;
+  }
+  
+  .locked-indicator-clockwyz {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #059669;
+    font-size: 14px;
+    font-weight: 600;
+    background: #d1fae5;
+    padding: 6px 12px;
+    border-radius: 16px;
+  }
+  
+  .time-section-clockwyz {
+    padding: 24px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  
+  .time-info-header-clockwyz,
+  .section-header-clockwyz {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    color: #374151;
+  }
+  
+  .section-title-clockwyz {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  .time-details-clockwyz {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-left: 28px;
+  }
+  
+  .time-row-details-clockwyz {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+  }
+  
+  .time-label-clockwyz {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+    min-width: 80px;
+  }
+  
+  .time-value-clockwyz {
+    font-size: 14px;
+    color: #1f2937;
+    font-weight: 600;
+    text-align: right;
+  }
+  
+  .additional-details-clockwyz {
+    padding: 24px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  
+  .detail-row-clockwyz {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  
+  .detail-row-clockwyz:last-child {
+    margin-bottom: 0;
+  }
+  
+  .detail-label-clockwyz {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .detail-value-clockwyz {
+    font-size: 14px;
+    color: #374151;
+    font-weight: 500;
+  }
+  
+  .description-text-clockwyz {
+    color: #374151;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+  }
+  
+  .priority-section-clockwyz {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 24px;
+    background: #fef3c7;
+    border-bottom: 1px solid #f59e0b;
+    margin: 0;
+  }
+  
+  .priority-badge-clockwyz {
+    font-size: 12px;
+    font-weight: 700;
+    color: #92400e;
+  }
+  
+  .status-section-clockwyz {
+    padding: 24px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  
+  .status-completed-clockwyz,
+  .status-pending-clockwyz {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  
+  .status-completed-clockwyz {
+    color: #059669;
+    background: #d1fae5;
+  }
+  
+  .status-pending-clockwyz {
+    color: #0369a1;
+    background: #dbeafe;
+  }
+  
+  .sidebar-actions-clockwyz {
+    padding: 24px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #f8fafc;
+    margin-top: auto;
+  }
+  
+  .action-row-clockwyz {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .action-btn-clockwyz {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 12px 16px !important;
+    border-radius: 8px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    border: 1px solid transparent !important;
+  }
+  
+  .edit-btn-clockwyz {
+    background: #3b82f6 !important;
+    color: white !important;
+    width: 100% !important;
+  }
+  
+  .edit-btn-clockwyz:hover {
+    background: #2563eb !important;
+  }
+  
+  .secondary-btn-clockwyz {
+    flex: 1 !important;
+    background: white !important;
+    color: #374151 !important;
+    border-color: #d1d5db !important;
+  }
+  
+  .secondary-btn-clockwyz:hover {
+    background: #f9fafb !important;
+    border-color: #9ca3af !important;
+  }
+  
+  .delete-btn-clockwyz {
+    background: #ef4444 !important;
+    color: white !important;
+    width: 100% !important;
+  }
+  
+  .delete-btn-clockwyz:hover {
+    background: #dc2626 !important;
+  }
+  
+  /* Update main content margin */
+  .main-content-clockwyz.sidebar-open {
+    margin-right: 400px;
+    transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .event-details-sidebar-clockwyz {
+      width: 100vw;
+      left: 0;
+    }
+    
+    .main-content-clockwyz.sidebar-open {
+      margin-right: 0;
+    }
   }
   
   @keyframes previewPulse {
@@ -1119,12 +1685,13 @@
   
   /* Preview event content styling */
   .preview-event-clockwyz .event-title-clockwyz {
-    font-weight: 600 !important;
-    margin-bottom: 2px !important;
+    font-weight: 400 ;
+    margin-top: 0px;
+    padding: 0;
   }
   
   .preview-event-clockwyz .event-details-clockwyz {
-    font-size: 10px !important;
+    font-size: 0.5px ;
     opacity: 0.9 !important;
   }
   
@@ -1132,7 +1699,7 @@
   .selected-slot-highlight-clockwyz {
     position: absolute;
     background: rgba(59, 130, 246, 0.1) !important;
-    border: 2px solid rgba(59, 130, 246, 0.4) !important;
+    border: 1px solid rgba(59, 130, 246, 0.4) !important;
     border-radius: 4px !important;
     pointer-events: none !important;
     z-index: 5 !important;
