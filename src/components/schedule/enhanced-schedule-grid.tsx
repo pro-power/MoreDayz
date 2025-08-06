@@ -35,6 +35,8 @@ import {
   BarChart3,
   GraduationCap,
   Save,
+  Scale,
+  Sun,
   X
 } from 'lucide-react';
 
@@ -48,6 +50,9 @@ import { ScheduleEvent, EventType, Priority, TimeSlot, DragState, PlanWorkData,
 import { cn, formatTime, parseTime, timeToPixels, pixelsToTime } from '@/lib/utils/index';
 
 // Import UI components
+import { TodaySection } from '@/components/dashboard/today-section';
+import { StatsSection } from '@/components/dashboard/stats-section';
+import { PrioritiesSection } from "@/components/dashboard/priorities-section";
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -86,7 +91,7 @@ export function EnhancedScheduleGrid() {
   } = useScheduleStore();
 
   // Local state for UI interactions
-  const [currentView, setCurrentView] = useState('planner');
+  const [currentView, setCurrentView] = useState('today'); // Changed from 'planner' to 'today'
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isHologramMode, setIsHologramMode] = useState(false);
   const [conflicts, setConflicts] = useState<string[]>([]);
@@ -122,10 +127,11 @@ export function EnhancedScheduleGrid() {
 
   // Navigation items
   const navigationItems = [
+    { id: 'today', label: 'Today', icon: Sun },
     { id: 'planner', label: 'Planner', icon: Calendar },
-    { id: 'priorities', label: 'Priorities', icon: Target },
+    { id: 'priorities', label: 'Priorities', icon: Scale },
     { id: 'stats', label: 'Stats', icon: BarChart3 },
-    { id: 'focus', label: 'Focus', icon: Brain, badge: 'New' },
+    // { id: 'focus', label: 'Focus', icon: Brain, badge: 'New' },
     { id: 'habits', label: 'Habits', icon: CheckCircle },
     { id: 'courses', label: 'Courses', icon: GraduationCap },
     { id: 'meetings', label: 'Meetings', icon: Users }
@@ -728,11 +734,11 @@ const handleMouseUp = (e: React.MouseEvent) => {
             {!sidebarCollapsed && (
               <>
                 <span className="nav-label-clockwyz">{item.label}</span>
-                {item.badge && (
+                {/* {item.badge && (
                   <Badge variant="secondary" className="nav-badge-clockwyz">
                     {item.badge}
                   </Badge>
-                )}
+                )} */}
               </>
             )}
           </Button>
@@ -771,59 +777,82 @@ const handleMouseUp = (e: React.MouseEvent) => {
   const Header = () => (
     <header className="header-clockwyz">
       <div className="header-left-clockwyz">
-        <h1 className="page-title-clockwyz">Planner</h1>
-        <div className="date-nav-clockwyz">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigateWeek('prev')}
-            className="nav-btn-clockwyz"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
-          <h2 className="current-month-clockwyz">
-            {currentWeek.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-          </h2>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigateWeek('next')}
-            className="nav-btn-clockwyz"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
-
-      <div className="header-right-clockwyz">
-        <div className="next-event-clockwyz">
-          <span className="next-label-clockwyz">Next:</span>
-          <div className="next-event-info-clockwyz">
-            <div className="event-indicator-clockwyz"></div>
-            <span>Focus time</span>
+        <h1 className="page-title-clockwyz">
+          {currentView === 'today' && 'Today'}
+          {currentView === 'planner' && 'Planner'}
+          {currentView === 'priorities' && 'Priorities'}
+          {currentView === 'stats' && 'Statistics'}
+          {currentView === 'habits' && 'Habits'}
+          {currentView === 'courses' && 'Courses'}
+          {currentView === 'meetings' && 'Meetings'}
+        </h1>
+        
+        {/* Only show date navigation on planner view */}
+        {currentView === 'planner' && (
+          <div className="date-nav-clockwyz">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigateWeek('prev')}
+              className="nav-btn-clockwyz"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+            <h2 className="current-month-clockwyz">
+              {currentWeek.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+            </h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigateWeek('next')}
+              className="nav-btn-clockwyz"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Button>
           </div>
-        </div>
-
-        <Button className="add-task-btn-clockwyz">
+        )}
+      </div>
+  
+      <div className="header-right-clockwyz">
+        {/* Show next event info only on today view */}
+        {currentView === 'today' && (
+          <div className="next-event-clockwyz">
+            <span className="next-label-clockwyz">Next:</span>
+            <div className="next-event-info-clockwyz">
+              <div className="event-indicator-clockwyz"></div>
+              <span>Focus time</span>
+            </div>
+          </div>
+        )}
+  
+        <Button 
+          className="add-task-btn-clockwyz"
+          onClick={() => {
+            if (currentView !== 'planner') {
+              setCurrentView('planner');
+            }
+            // This could trigger the quick event form
+          }}
+        >
           <Plus className="w-4 h-4" />
           New Task
         </Button>
-
+  
         <Button variant="ghost" size="sm" className="header-action-btn-clockwyz">
           <Search className="w-5 h-5" />
         </Button>
-
+  
         <Button variant="ghost" size="sm" className="header-action-btn-clockwyz notification-btn-clockwyz">
           <Bell className="w-5 h-5" />
           <span className="notification-dot-clockwyz"></span>
         </Button>
-
+  
         <div className="user-avatar-clockwyz">
           <span>AJ</span>
         </div>
       </div>
     </header>
-  );
+  ); 
 
   const WeekStats = () => (
     <Card className="week-stats-clockwyz">
@@ -1777,35 +1806,73 @@ const EventDetailsSidebar = () => {
         <Header />
         
         <div className="content-clockwyz">
-          <WeekStats />
-          
-          {/* Conflicts Alert */}
-          <AnimatePresence>
-          {conflicts.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="conflicts-alert-clockwyz"
-            >
-              <AlertTriangle className="w-5 h-5" />
-              <span>Your events are being displayed as they will to others.</span>
-              <Button variant="ghost" size="sm" className="alert-dismiss-clockwyz">
-                <XCircle className="w-4 h-4" />
-              </Button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {currentView === 'today' && <TodaySection />}
+        
+        {currentView === 'planner' && (
+            <>
+      <WeekStats />
+      
+      {/* Conflicts Alert */}
+      <AnimatePresence>
+        {conflicts.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="conflicts-alert-clockwyz"
+          >
+            <AlertTriangle className="w-5 h-5" />
+            <span>Your events are being displayed as they will to others.</span>
+            <Button variant="ghost" size="sm" className="alert-dismiss-clockwyz">
+              <XCircle className="w-4 h-4" />
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-          <div 
-          className="schedule-container-clockwyz"
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-        >
-
-          <ScheduleGrid />
-          </div>
-        </div>
+      <div 
+        className="schedule-container-clockwyz"
+        onMouseMove={handleDragMove}
+        onMouseUp={handleDragEnd}
+        onMouseLeave={handleDragEnd}
+      >
+        <ScheduleGrid />
+      </div>
+    </>
+  )}
+  
+  {/* NEW: Stats Section */}
+  {currentView === 'stats' && <StatsSection />}
+  
+  
+  {/* Placeholder sections for other views */}
+  {currentView === 'stats' && <PrioritiesSection />}
+  
+  
+  {currentView === 'habits' && (
+    <div className="placeholder-section-clockwyz">
+      <CheckCircle className="placeholder-icon-clockwyz" />
+      <h2>Habits</h2>
+      <p>Daily habit tracking coming soon...</p>
+    </div>
+  )}
+  
+  {currentView === 'courses' && (
+    <div className="placeholder-section-clockwyz">
+      <GraduationCap className="placeholder-icon-clockwyz" />
+      <h2>Courses</h2>
+      <p>Academic course management coming soon...</p>
+    </div>
+  )}
+  
+  {currentView === 'meetings' && (
+    <div className="placeholder-section-clockwyz">
+      <Users className="placeholder-icon-clockwyz" />
+      <h2>Meetings</h2>
+      <p>Meeting coordination coming soon...</p>
+    </div>
+  )}
+</div>
       </div>
 
       {/* Event Details Sidebar */}
