@@ -1,5 +1,6 @@
 /* Clockwyz Schedule Grid Styles */
 
+
 .app-clockwyz {
     display: flex;
     height: 100vh;
@@ -6965,3 +6966,465 @@
       justify-content: center;
     }
   }
+
+  /* Add this CSS to your clockwyz.css - Redesigned AI Interface Styles */
+
+/* ===== REDESIGNED AI CHAT CARD ===== */
+.ai-chat-card {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.ai-chat-card textarea {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.ai-chat-card textarea::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+.ai-chat-card textarea:focus::placeholder {
+  color: #d1d5db;
+}
+
+/* ===== TOOLS DROPDOWN ANIMATIONS ===== */
+.ai-chat-card button[style*="f8fafc"] {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.ai-chat-card button[style*="f8fafc"]:hover {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ===== SUBMIT BUTTON ENHANCEMENT ===== */
+.ai-chat-card button[style*="linear-gradient"] {
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.ai-chat-card button[style*="linear-gradient"]:hover {
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+/* ===== LOADING ANIMATION ENHANCEMENT ===== */
+.ai-chat-card div[style*="linear-gradient(90deg"] {
+  animation: loading-pulse 2s ease-in-out infinite;
+}
+
+@keyframes loading-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* ===== MOBILE RESPONSIVENESS ===== */
+@media (max-width: 768px) {
+  .ai-chat-card {
+    right: 5vw !important;
+    width: 90vw !important;
+  }
+  
+  .ai-chat-card textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+}
+
+/* ===== SMOOTH TRANSITIONS ===== */
+.ai-chat-card * {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== DROPDOWN SHADOW ENHANCEMENT ===== */
+.ai-chat-card div[style*="boxShadow"] {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ===== FOCUS STATES ===== */
+.ai-chat-card textarea:focus {
+  outline: none;
+}
+
+.ai-chat-card button:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* ===== SELECTION STYLING ===== */
+.ai-chat-card textarea::selection {
+  background: rgba(59, 130, 246, 0.2);
+}
+
+/* ===== SCROLLBAR STYLING FOR TEXTAREA ===== */
+.ai-chat-card textarea::-webkit-scrollbar {
+  width: 2px;
+}
+
+.ai-chat-card textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ai-chat-card textarea::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 1px;
+}
+
+.ai-chat-card textarea::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* ===== HOVER EFFECTS FOR TOOL ITEMS ===== */
+.ai-chat-card button[style*="width: 100%"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== ICON ANIMATIONS ===== */
+.ai-chat-card svg {
+  transition: transform 0.2s ease;
+}
+
+.ai-chat-card button:hover svg {
+  transform: scale(1.05);
+}
+
+/* ===== GRADIENT ENHANCEMENTS ===== */
+.ai-chat-card button[style*="linear-gradient"] {
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-chat-card button[style*="linear-gradient"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.ai-chat-card button[style*="linear-gradient"]:hover::before {
+  left: 100%;
+}
+
+/* AI Assistant Button */
+.ai-assistant-button {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 9999 !important;
+  width: 64px !important;
+  height: 64px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+  border: none !important;
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3) !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+}
+
+.ai-assistant-button:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4) !important;
+}
+
+/* AI Chat Interface */
+.ai-chat-interface {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 9998 !important;
+  width: 384px !important;
+  height: 600px !important;
+  max-height: calc(100vh - 48px) !important;
+  background: white !important;
+  border-radius: 16px !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* Ensure chat interface is above everything */
+.ai-chat-interface * {
+  color: inherit !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .ai-chat-interface {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    border-radius: 0 !important;
+    max-height: 100vh !important;
+  }
+  
+  .ai-assistant-button {
+    bottom: 16px !important;
+    right: 16px !important;
+    width: 56px !important;
+    height: 56px !important;
+  }
+}
+
+/* Animation keyframes */
+@keyframes ai-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+.ai-pulse-animation {
+  animation: ai-pulse 2s infinite;
+}
+
+/* Notification badge */
+.ai-notification-badge {
+  position: absolute !important;
+  top: -8px !important;
+  right: -8px !important;
+  min-width: 24px !important;
+  height: 24px !important;
+  background: #ef4444 !important;
+  color: white !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  border: 2px solid white !important;
+}
+
+/* Message bubbles */
+.ai-message-user {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%) !important;
+  color: white !important;
+  border-radius: 18px 18px 4px 18px !important;
+  padding: 12px 16px !important;
+  margin: 8px 0 !important;
+  max-width: 80% !important;
+  margin-left: auto !important;
+  word-wrap: break-word !important;
+}
+
+.ai-message-assistant {
+  background: #f3f4f6 !important;
+  color: #1f2937 !important;
+  border-radius: 18px 18px 18px 4px !important;
+  padding: 12px 16px !important;
+  margin: 8px 0 !important;
+  max-width: 80% !important;
+  margin-right: auto !important;
+  word-wrap: break-word !important;
+}
+
+/* Input area */
+.ai-input-container {
+  padding: 16px !important;
+  border-top: 1px solid #e5e7eb !important;
+  background: white !important;
+}
+
+.ai-input-field {
+  width: 100% !important;
+  padding: 12px 16px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 24px !important;
+  outline: none !important;
+  resize: none !important;
+}
+
+.ai-input-field:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Header */
+.ai-chat-header {
+  padding: 16px !important;
+  border-bottom: 1px solid #e5e7eb !important;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+/* Messages area */
+.ai-messages-area {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 16px !important;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(249, 250, 251, 0.8) 100%) !important;
+}
+
+/* Override any conflicting styles */
+.ai-chat-interface button {
+  cursor: pointer !important;
+}
+
+.ai-chat-interface .bg-blue-500 {
+  background-color: #3b82f6 !important;
+}
+
+.ai-chat-interface .text-white {
+  color: white !important;
+}
+
+
+/* Add this CSS to your clockwyz.css - Redesigned AI Interface Styles */
+
+/* ===== REDESIGNED AI CHAT CARD ===== */
+.ai-chat-card {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.ai-chat-card textarea {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.ai-chat-card textarea::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+.ai-chat-card textarea:focus::placeholder {
+  color: #d1d5db;
+}
+
+/* ===== TOOLS DROPDOWN ANIMATIONS ===== */
+.ai-chat-card button[style*="f8fafc"] {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.ai-chat-card button[style*="f8fafc"]:hover {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* ===== SUBMIT BUTTON ENHANCEMENT ===== */
+.ai-chat-card button[style*="linear-gradient"] {
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.ai-chat-card button[style*="linear-gradient"]:hover {
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+/* ===== LOADING ANIMATION ENHANCEMENT ===== */
+.ai-chat-card div[style*="linear-gradient(90deg"] {
+  animation: loading-pulse 2s ease-in-out infinite;
+}
+
+@keyframes loading-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+/* ===== MOBILE RESPONSIVENESS ===== */
+@media (max-width: 768px) {
+  .ai-chat-card {
+    right: 5vw !important;
+    width: 90vw !important;
+  }
+  
+  .ai-chat-card textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+}
+
+/* ===== SMOOTH TRANSITIONS ===== */
+.ai-chat-card * {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ===== DROPDOWN SHADOW ENHANCEMENT ===== */
+.ai-chat-card div[style*="boxShadow"] {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ===== FOCUS STATES ===== */
+.ai-chat-card textarea:focus {
+  outline: none;
+}
+
+.ai-chat-card button:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* ===== SELECTION STYLING ===== */
+.ai-chat-card textarea::selection {
+  background: rgba(59, 130, 246, 0.2);
+}
+
+/* ===== SCROLLBAR STYLING FOR TEXTAREA ===== */
+.ai-chat-card textarea::-webkit-scrollbar {
+  width: 2px;
+}
+
+.ai-chat-card textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ai-chat-card textarea::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 1px;
+}
+
+.ai-chat-card textarea::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* ===== HOVER EFFECTS FOR TOOL ITEMS ===== */
+.ai-chat-card button[style*="width: 100%"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== ICON ANIMATIONS ===== */
+.ai-chat-card svg {
+  transition: transform 0.2s ease;
+}
+
+.ai-chat-card button:hover svg {
+  transform: scale(1.05);
+}
+
+/* ===== GRADIENT ENHANCEMENTS ===== */
+.ai-chat-card button[style*="linear-gradient"] {
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-chat-card button[style*="linear-gradient"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.ai-chat-card button[style*="linear-gradient"]:hover::before {
+  left: 100%;
+}

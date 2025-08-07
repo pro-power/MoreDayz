@@ -50,6 +50,9 @@ import { ScheduleEvent, EventType, Priority, TimeSlot, DragState, PlanWorkData,
 import { cn, formatTime, parseTime, timeToPixels, pixelsToTime } from '@/lib/utils/index';
 
 // Import UI components
+import { useAIContext } from '@/hooks/use-ai-context';
+import { AIAssistantButton } from '@/components/ai/ai-assistant-button';
+import { AIChatInterface } from '@/components/ai/ai-chat-interface';
 import { TodaySection } from '@/components/dashboard/today-section';
 import { StatsSection } from '@/components/dashboard/stats-section';
 import { PrioritiesSection } from "@/components/dashboard/priorities-section";
@@ -104,6 +107,17 @@ export function EnhancedScheduleGrid() {
   const [showEventDetails, setShowEventDetails] = useState(false);
   const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null);
 
+  const { setCurrentSection, trackAction, setSelectedItems } = useAIContext()
+
+// Simple effect without function dependencies
+useEffect(() => {
+  setCurrentSection(currentView);
+}, [currentView]); // Remove function dependencies
+
+// Separate effect for tracking (optional)
+useEffect(() => {
+  trackAction('section_changed', { section: currentView });
+}, [currentView]); 
   
 
   const [isDragInitiated, setIsDragInitiated] = useState(false);
@@ -1906,6 +1920,8 @@ const EventDetailsSidebar = () => {
         {dragState.draggedEvent.title}
       </motion.div>
       )}
+      <AIAssistantButton />
+      <AIChatInterface />
     </div>
   );
 }
