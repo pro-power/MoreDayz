@@ -53,6 +53,9 @@ import { cn, formatTime, parseTime, timeToPixels, pixelsToTime } from '@/lib/uti
 import { TodaySection } from '@/components/dashboard/today-section';
 import { StatsSection } from '@/components/dashboard/stats-section';
 import { PrioritiesSection } from "@/components/dashboard/priorities-section";
+import { CoursesSection } from '@/components/dashboard/courses-section';
+import { HabitsSection } from '@/components/dashboard/habits-section';
+import { MeetingsSection } from '@/components/dashboard/meetings-section';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
@@ -1846,32 +1849,15 @@ const EventDetailsSidebar = () => {
   
   
   {/* Placeholder sections for other views */}
-  {currentView === 'stats' && <PrioritiesSection />}
+  {currentView === 'priorities' && <PrioritiesSection />}
+
+  {currentView === 'courses' && <CoursesSection />}
   
   
-  {currentView === 'habits' && (
-    <div className="placeholder-section-clockwyz">
-      <CheckCircle className="placeholder-icon-clockwyz" />
-      <h2>Habits</h2>
-      <p>Daily habit tracking coming soon...</p>
-    </div>
-  )}
+  {currentView === 'habits' && <HabitsSection />}
   
-  {currentView === 'courses' && (
-    <div className="placeholder-section-clockwyz">
-      <GraduationCap className="placeholder-icon-clockwyz" />
-      <h2>Courses</h2>
-      <p>Academic course management coming soon...</p>
-    </div>
-  )}
   
-  {currentView === 'meetings' && (
-    <div className="placeholder-section-clockwyz">
-      <Users className="placeholder-icon-clockwyz" />
-      <h2>Meetings</h2>
-      <p>Meeting coordination coming soon...</p>
-    </div>
-  )}
+  {currentView === 'meetings' && <MeetingsSection />}
 </div>
       </div>
 
